@@ -7,15 +7,44 @@ var app = express();
 require('dotenv').config();
 
 var PORT = process.env.PORT || 3000;
-app.get("/png", function (req, res) {
-  res.send('pong');
+app.get("/api/products", function (req, res) {
+  var products = [{
+    id: 1,
+    name: "tablewooden",
+    price: 300
+  }, {
+    id: 2,
+    name: "glass",
+    price: 100
+  }, {
+    id: 3,
+    name: "knife",
+    price: 500
+  }, {
+    id: 4,
+    name: "climb",
+    price: 50
+  }, {
+    id: 5,
+    name: "climb",
+    price: 50
+  }]; // Filter products based on the "search" query parameter
+
+  if (req.query.search) {
+    var search = req.query.search.toLowerCase(); // Convert search term to lowercase for case-insensitive comparison
+
+    var filteredProducts = products.filter(function (product) {
+      return product.name.toLowerCase().includes(search);
+    });
+    res.send(filteredProducts);
+    return;
+  } // Delay response by 3 seconds if no search query is provided
+
+
+  setTimeout(function () {
+    res.send(products);
+  }, 3000);
 });
-app.get("/twitter", function (req, res) {
-  res.send('<h1> this is twitter</h1>');
-});
-app.get("/yutube", function (req, res) {
-  res.send('<h1> this is youtube</h1>');
-});
-app.listen(process.env.PORT, function () {
-  console.log("This is setwiteerver side. Port ".concat(PORT, " is active"));
+app.listen(PORT, function () {
+  console.log("Server is running. Port ".concat(PORT, " is active"));
 });
