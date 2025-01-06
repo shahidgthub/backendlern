@@ -1,53 +1,25 @@
 const express = require('express');
 const app = express();
-require('dotenv').config();
+const bodyparser = require('body-parser');
+const cors = require(cors)
+const AuthRouter = require('./Routes/AuthRouter/');
+require('dotenv').config(); // Load environment variables
+require('./Models/db.js'); // Connect to MongoDB
 const PORT = process.env.PORT || 3000;
-
+// Sample route
 app.get("/api/products", (req, res) => {
-  const products = [
-    {
-      id: 1,
-      name: "tablewooden",
-      price: 300
-    },
-    {
-      id: 2,
-      name: "glass",
-      price: 100
-    },
-    {
-      id: 3,
-      name: "knife",
-      price: 500
-    },
-    {
-      id: 4,
-      name: "climb",
-      price: 50
-    },
-    {
-      id: 5,
-      name: "climb",
-      price: 50
-    }
-  ];
+  res.status(200).json({ message: "Products endpoint is working!" });
+});
+app.use (bodyparser.json());
+app.use(cors())
+app.use('/auth',AuthR)
 
-  // Filter products based on the "search" query parameter
-  if (req.query.search) {
-    const search = req.query.search.toLowerCase(); // Convert search term to lowercase for case-insensitive comparison
-    const filteredProducts = products.filter(product =>
-      product.name.toLowerCase().includes(search)
-    );
-    res.send(filteredProducts);
-    return;
-  }
-
-  // Delay response by 3 seconds if no search query is provided
-  setTimeout(() => {
-    res.send(products);
-  }, 3000);
+// Fallback for undefined routes
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
 });
 
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running. Port ${PORT} is active`);
 });
